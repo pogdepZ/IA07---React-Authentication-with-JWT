@@ -19,7 +19,7 @@ export const setAccessToken = (token) => {
     if (token.includes("EXPIRED")) {
       addLog(`Token manually corrupted: ${token}`, 'warning');
     } else {
-      addLog(`Token updated: ${token.substring(0, 15)}...`, 'success');
+      addLog(`Token updated: ${token.substring(0, 25)}...`, 'success');
     }
   } else {
     addLog("Token cleared (Logout)", 'error');

@@ -1,16 +1,80 @@
-# React + Vite
+# React JWT Authentication Demo (Axios Interceptors + React Query)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dự án Demo triển khai quy trình xác thực bảo mật sử dụng **JWT (Access Token & Refresh Token)**.
+Dự án bao gồm một **Mock Backend** chạy trực tiếp trên trình duyệt và hệ thống **Live Logs** để trực quan hóa quá trình tự động làm mới token (Silent Refresh) mà không cần Backend thực tế.
 
-Currently, two official plugins are available:
+## 🌟 Tính năng nổi bật
+- **Cơ chế xác thực:** Access Token (lưu bộ nhớ) & Refresh Token (lưu LocalStorage).
+- **Axios Interceptors:** Tự động bắt lỗi 401, gọi API refresh token và thực hiện lại request ban đầu.
+- **Mock Server:** Giả lập các API Login, Profile, Refresh ngay trong Client (không cần chạy server riêng).
+- **Live Log Terminal:** Giao diện xem log thời gian thực giúp theo dõi luồng chạy của Interceptor.
+- **Test Mode:** Chức năng cố tình làm sai Token để kiểm thử tính năng tự động Refresh.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠 Công nghệ sử dụng
+- **React** (Vite)
+- **TanStack Query** (React Query) - Quản lý Server State.
+- **Axios** - Networking & Interceptors.
+- **React Hook Form** - Quản lý form đăng nhập.
+- **Tailwind CSS** - Styling.
 
-## React Compiler
+## 🚀 Cài đặt và Chạy dự án
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Yêu cầu: Node.js đã được cài đặt.
 
-## Expanding the ESLint configuration
+### 1. Cài đặt thư viện:
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 2. Chạy dự án (Development):
+```bash
+npm run dev
+```
+
+### 3. Truy cập:
+Mở trình duyệt tại: `http://localhost:5173`
+
+---
+
+## 🔐 Tài khoản Demo
+Sử dụng thông tin sau để đăng nhập vào hệ thống:
+- **Email:** user@example.com
+- **Password:** password123
+
+---
+
+## 🧪 Hướng dẫn Test (Kịch bản Refresh Token)
+Để chứng minh cơ chế Refresh Token hoạt động mà không cần đợi Token hết hạn thật, thực hiện các bước sau trên **Dashboard**:
+
+1. Đăng nhập thành công.
+2. Quan sát bảng **System Logs**.
+3. Nhấn nút màu vàng **Corrupt Access Token**.
+   - Hành động: Hệ thống gán Token sai vào bộ nhớ (giả lập Token hết hạn).
+4. Nhấn nút **Refetch Data**.
+5. Quan sát Log:
+   - 🔴 *401 Unauthorized*: Interceptor bắt lỗi.
+   - 🟡 *Refreshing*: Gọi `/refresh`.
+   - 🟢 *Success*: Nhận Access Token mới.
+   - 🔵 *Retry*: Request được gửi lại thành công.
+
+---
+
+## 📂 Cấu trúc thư mục chính
+```
+src/
+├── api/
+│   ├── axios.js        # Cấu hình Interceptor & Logic Refresh Token (Core)
+│   ├── mockBackend.js  # Giả lập Server response
+│   └── client.js       # Các hàm gọi API
+├── context/
+│   └── AuthContext.jsx # Quản lý trạng thái đăng nhập toàn cục
+├── components/
+│   └── LogPanel.jsx    # Màn hình hiển thị Log thời gian thực
+├── pages/
+│   ├── Login.jsx       # Form đăng nhập (React Hook Form)
+│   └── Dashboard.jsx   # Trang được bảo vệ & Khu vực Test
+└── utils/
+    └── logger.js       # Event Bus dùng để bắn log ra UI
+```
+
+---
